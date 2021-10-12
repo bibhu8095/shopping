@@ -28,7 +28,7 @@ public class Item {
 
 	@Column(name = "price")
 	@NotNull
-	private Float price;
+	private Double price;
 
 	@Column(name = "stock")
 	@NotNull
@@ -38,7 +38,7 @@ public class Item {
 		super();
 	}
 
-	public Item(Long itemId, String itemName, String description, Float price, Double stock) {
+	public Item(Long itemId, String itemName, String description, Double price, Double stock) {
 		super();
 		this.itemId = itemId;
 		this.itemName = itemName;
@@ -71,11 +71,11 @@ public class Item {
 		this.description = description;
 	}
 
-	public Float getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -88,61 +88,10 @@ public class Item {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
-		result = prime * result + ((itemName == null) ? 0 : itemName.hashCode());
-		result = prime * result + ((price == null) ? 0 : price.hashCode());
-		result = prime * result + ((stock == null) ? 0 : stock.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Item other = (Item) obj;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (itemId == null) {
-			if (other.itemId != null)
-				return false;
-		} else if (!itemId.equals(other.itemId))
-			return false;
-		if (itemName == null) {
-			if (other.itemName != null)
-				return false;
-		} else if (!itemName.equals(other.itemName))
-			return false;
-		if (price == null) {
-			if (other.price != null)
-				return false;
-		} else if (!price.equals(other.price))
-			return false;
-		if (stock == null) {
-			if (other.stock != null)
-				return false;
-		} else if (!stock.equals(other.stock))
-			return false;
-		return true;
-	}
-
-	@Override
 	public String toString() {
 		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", description=" + description + ", price=" + price
 				+ ", stock=" + stock + "]";
 	}
-	
-	
 
 	/*
 	 * @Column(name = "quantity")

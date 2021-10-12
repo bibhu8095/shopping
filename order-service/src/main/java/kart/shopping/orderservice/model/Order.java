@@ -19,16 +19,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-public class Order implements Serializable{
+public class Order {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orderId;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
+	@Column(name = "user_id")
 	@NotNull
-	private User user;
+	private Long userId;
 
 	@Column(name = "ordered_date")
 	@NotNull
@@ -43,7 +42,7 @@ public class Order implements Serializable{
 	private String status;
 
 	@Enumerated(EnumType.STRING)
-	private PaymentType type;
+	private PaymentType paymentType;
 
 	public Long getOrderId() {
 		return orderId;
@@ -53,12 +52,12 @@ public class Order implements Serializable{
 		this.orderId = orderId;
 	}
 
-	public User getUser() {
-		return user;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 	public LocalDate getOrderedDate() {
@@ -85,89 +84,35 @@ public class Order implements Serializable{
 		this.status = status;
 	}
 
-	public PaymentType getType() {
-		return type;
+	public PaymentType getPaymentType() {
+		return paymentType;
 	}
 
-	public void setType(PaymentType type) {
-		this.type = type;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((orderId == null) ? 0 : orderId.hashCode());
-		result = prime * result + ((orderedDate == null) ? 0 : orderedDate.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Order other = (Order) obj;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (orderId == null) {
-			if (other.orderId != null)
-				return false;
-		} else if (!orderId.equals(other.orderId))
-			return false;
-		if (orderedDate == null) {
-			if (other.orderedDate != null)
-				return false;
-		} else if (!orderedDate.equals(other.orderedDate))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
-			return false;
-		if (type != other.type)
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Order [orderId=" + orderId + ", user=" + user + ", orderedDate=" + orderedDate + ", description="
-				+ description + ", status=" + status + ", type=" + type + "]";
+	public void setPaymentType(PaymentType paymentType) {
+		this.paymentType = paymentType;
 	}
 
 	public Order() {
 		super();
 	}
 
-	public Order(Long orderId, User user, LocalDate orderedDate, String description, String status, PaymentType type) {
+	public Order(Long orderId, Long userId, LocalDate orderedDate, String description, String status,
+			PaymentType paymentType) {
 		super();
 		this.orderId = orderId;
-		this.user = user;
+		this.userId = userId;
 		this.orderedDate = orderedDate;
 		this.description = description;
 		this.status = status;
-		this.type = type;
+		this.paymentType = paymentType;
 	}
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Order [orderId=" + orderId + ", userId=" + userId + ", orderedDate=" + orderedDate + ", description="
+				+ description + ", status=" + status + ", paymentType=" + paymentType + "]";
+	}
+
 	/*
 	 * @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
 	 * 

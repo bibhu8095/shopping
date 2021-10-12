@@ -42,9 +42,8 @@ public class Address {
 	@NotNull
 	private String addressType;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
-	@NotNull
+	@ManyToOne
+	@JoinColumn(name="user_id")
 	private User user;
 
 	public Address() {
