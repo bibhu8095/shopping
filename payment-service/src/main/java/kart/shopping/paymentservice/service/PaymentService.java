@@ -2,6 +2,7 @@ package kart.shopping.paymentservice.service;
 
 import kart.shopping.paymentservice.entity.Address;
 import kart.shopping.paymentservice.entity.Payment;
+import kart.shopping.paymentservice.entity.PaymentType;
 
 public interface PaymentService {
 
@@ -9,5 +10,5 @@ public interface PaymentService {
 	
 	public void savePayment(Payment payment);
 	
-	public Payment savePaymentDetails(int orderId, double price, String paymentType, Address shippingAddress);
+	public Payment savePaymentDetails(Long orderId, double price, PaymentType paymentType, Address shippingAddress);
 }

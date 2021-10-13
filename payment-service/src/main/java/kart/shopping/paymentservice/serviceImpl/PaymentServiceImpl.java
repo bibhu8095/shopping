@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import kart.shopping.paymentservice.entity.Address;
 import kart.shopping.paymentservice.entity.Payment;
+import kart.shopping.paymentservice.entity.PaymentType;
 import kart.shopping.paymentservice.repository.PaymentRepository;
 import kart.shopping.paymentservice.service.PaymentService;
 
@@ -34,9 +35,17 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public Payment savePaymentDetails(int orderId, double price, String paymentType, Address shippingAddress) {
-		Payment payment = new Payment(orderId, orderId, price, paymentType, shippingAddress);
-		return paymentRepository.save(payment);
+	public Payment savePaymentDetails(Long orderId, double price, PaymentType paymentType, Address shippingAddress) {
+		
+		Payment payment=new Payment(orderId, price, paymentType, shippingAddress);
+		try {
+			if(payment!=null) {
+				paymentRepository.save(payment);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return payment;
 	}
 
 }

@@ -3,12 +3,17 @@ package kart.shopping.paymentservice.entity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "payment")
@@ -19,16 +24,21 @@ public class Payment {
 	private int id;
 
 	@Column(name = "order_id")
-	private int orderId;
+	//@NotEmpty(message = "orderId can not be empty")
+	private Long orderId;
 
 	@Column(name = "price")
+	//@NotEmpty(message = "price can not be empty")
 	private double price;
 
 	@Column(name = "payment_type")
-	private String paymentType;
+	//@NotEmpty(message = "paymentType can not be empty")
+	@Enumerated(EnumType.STRING)
+	private PaymentType paymentType;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id", referencedColumnName = "addressId")
+	@NotNull
 	private Address shippingAddress;
 
 	public Payment() {
@@ -36,9 +46,8 @@ public class Payment {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Payment(int id, int orderId, double price, String paymentType, Address shippingAddress) {
+	public Payment(Long orderId, double price, PaymentType paymentType, Address shippingAddress) {
 		super();
-		this.id = id;
 		this.orderId = orderId;
 		this.price = price;
 		this.paymentType = paymentType;
@@ -53,11 +62,11 @@ public class Payment {
 		this.id = id;
 	}
 
-	public int getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(int orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
 
@@ -69,11 +78,11 @@ public class Payment {
 		this.price = price;
 	}
 
-	public String getPaymentType() {
+	public PaymentType getPaymentType() {
 		return paymentType;
 	}
 
-	public void setPaymentType(String paymentType) {
+	public void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
 	}
 
