@@ -9,35 +9,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kart.shopping.orderservice.model.Address;
-import kart.shopping.orderservice.model.Order;
+import kart.shopping.orderservice.implservice.UserServiceImpl;
 import kart.shopping.orderservice.model.User;
-import kart.shopping.orderservice.service.UserService;
 
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 	
 	@GetMapping(value = "/all")
-	public List<User> getAllUsers() {
-		return userService.getAllUsers();
+	public ResponseEntity<List<User>> getAllUsers() {
+		return new ResponseEntity<>(userService.getAllUsers(),HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/create")
-	public User createUser(@RequestBody User user) {
-		return userService.createUser(user);
+	public ResponseEntity<User> createUser(@RequestBody User user) {
+		return new ResponseEntity<>(userService.createUser(user),HttpStatus.CREATED);
 	}
-	
-	@PostMapping(value = "/create-address")
-	public List<Address> createUserAddress(@RequestBody List<Address> Address) {
-		return userService.createUserAddress(Address);
-	}
-	
-
 }
