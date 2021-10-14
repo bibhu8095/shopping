@@ -1,4 +1,4 @@
-package kart.shopping.orderservice.DTO;
+package kart.shopping.orderservice.dto;
 
 import java.time.LocalDate;
 import java.util.List;

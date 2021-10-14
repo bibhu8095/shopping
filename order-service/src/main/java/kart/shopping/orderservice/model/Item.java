@@ -2,12 +2,9 @@
 package kart.shopping.orderservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
-
-import lombok.*;
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "items")
@@ -92,15 +89,4 @@ public class Item {
 		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", description=" + description + ", price=" + price
 				+ ", stock=" + stock + "]";
 	}
-
-	/*
-	 * @Column(name = "quantity")
-	 * 
-	 * @NonNull private int quantity;
-	 * 
-	 * @ManyToMany(mappedBy = "items")
-	 * 
-	 * @JsonIgnore private List<Order> orders;
-	 */
-
 }

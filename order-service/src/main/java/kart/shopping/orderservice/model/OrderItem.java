@@ -1,19 +1,13 @@
 
 package kart.shopping.orderservice.model;
 
-import javax.annotation.Generated;
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -36,6 +30,17 @@ public class OrderItem {
 	@Column(name = "quantity")
 	@NotNull
 	private Long quantity;
+	
+	public OrderItem() {
+		super();
+	}
+
+	public OrderItem(Long orderId, Long itemId, Long quantity) {
+		super();
+		this.orderId = orderId;
+		this.itemId = itemId;
+		this.quantity = quantity;
+	}
 
 	public Long getOrderId() {
 		return orderId;
@@ -61,15 +66,11 @@ public class OrderItem {
 		this.quantity = quantity;
 	}
 
-	public OrderItem() {
-		super();
+	@Override
+	public String toString() {
+		return "OrderItem [id=" + id + ", orderId=" + orderId + ", itemId=" + itemId + ", quantity=" + quantity + "]";
 	}
 
-	public OrderItem(Long orderId, Long itemId, Long quantity) {
-		super();
-		this.orderId = orderId;
-		this.itemId = itemId;
-		this.quantity = quantity;
-	}
+	
 	
 }

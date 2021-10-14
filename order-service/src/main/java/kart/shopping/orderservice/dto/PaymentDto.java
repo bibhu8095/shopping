@@ -1,4 +1,4 @@
-package kart.shopping.orderservice.DTO;
+package kart.shopping.orderservice.dto;
 
 import kart.shopping.orderservice.Enum.PaymentType;
 import kart.shopping.orderservice.model.Address;
