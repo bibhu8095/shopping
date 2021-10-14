@@ -60,6 +60,6 @@ public class PaymentServiceImplTest {
 		payment.setPaymentType(PaymentType.UPI);
 		Mockito.when(paymentRepository.save(payment)).thenReturn(payment);
 		Payment actual=paymentService.savePaymentDetails(1L, 200, PaymentType.UPI,hyd);
-		//Assert.assertEquals(payment, actual);
+		Assert.assertEquals(payment, actual);
 	}
 }
