@@ -11,9 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "payment")
@@ -24,14 +22,17 @@ public class Payment {
 	private int id;
 
 	@Column(name = "order_id")
+	@NotNull
 	//@NotEmpty(message = "orderId can not be empty")
 	private Long orderId;
 
 	@Column(name = "price")
+	@NotNull(message = "Price can not be null")
 	//@NotEmpty(message = "price can not be empty")
 	private double price;
 
 	@Column(name = "payment_type")
+	@NotNull
 	//@NotEmpty(message = "paymentType can not be empty")
 	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
