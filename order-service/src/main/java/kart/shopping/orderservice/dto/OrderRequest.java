@@ -1,6 +1,5 @@
 package kart.shopping.orderservice.dto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import kart.shopping.orderservice.Enum.PaymentType;

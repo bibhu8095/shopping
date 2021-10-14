@@ -2,6 +2,9 @@
 package kart.shopping.orderservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -31,6 +34,9 @@ public class Item {
 	@NotNull
 	private Double stock;
 
+	@OneToMany(mappedBy = "id.item", cascade = CascadeType.ALL)
+	List<OrderItem> orderItems;
+	
 	public Item() {
 		super();
 	}

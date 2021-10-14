@@ -2,10 +2,8 @@
 package kart.shopping.orderservice.model;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -15,18 +13,9 @@ import javax.validation.constraints.NotNull;
 
 public class OrderItem {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@EmbeddedId
+	private OrderItemPk id;
 	
-	@Column(name = "order_id")
-	@NotNull
-	private Long orderId;
-
-	@Column(name = "item_id")
-	@NotNull
-	private Long itemId;
-
 	@Column(name = "quantity")
 	@NotNull
 	private Long quantity;
@@ -35,27 +24,28 @@ public class OrderItem {
 		super();
 	}
 
-	public OrderItem(Long orderId, Long itemId, Long quantity) {
+	public OrderItem(Order order, Item item, Long quantity) {
 		super();
-		this.orderId = orderId;
-		this.itemId = itemId;
+		id = new OrderItemPk();
+		id.setOrder(order);
+		id.setItem(item);
 		this.quantity = quantity;
 	}
 
-	public Long getOrderId() {
-		return orderId;
+	public Order getOrder() {
+		return id.getOrder();
 	}
 
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
+	public void setOrder(Order order) {
+		id.setOrder(order);
 	}
 
-	public Long getItemId() {
-		return itemId;
+	public Item getItem() {
+		return id.getItem();
 	}
 
-	public void setItemId(Long itemId) {
-		this.itemId = itemId;
+	public void setItem(Item item) {
+		id.setItem(item);
 	}
 
 	public Long getQuantity() {
@@ -65,10 +55,14 @@ public class OrderItem {
 	public void setQuantity(Long quantity) {
 		this.quantity = quantity;
 	}
+	
+	public Double getTotalPricePerItem() {
+		return id.getItem().getPrice() * getQuantity();
+	}
 
 	@Override
 	public String toString() {
-		return "OrderItem [id=" + id + ", orderId=" + orderId + ", itemId=" + itemId + ", quantity=" + quantity + "]";
+		return "OrderItem [id=" + id + ", orderId=" + id.getOrder()+ ", itemId=" + id.getItem() + ", quantity=" + quantity + "]";
 	}
 
 	

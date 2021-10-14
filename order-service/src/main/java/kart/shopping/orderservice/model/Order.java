@@ -8,6 +8,8 @@ import kart.shopping.orderservice.Enum.PaymentType;
 
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "orders")
@@ -35,6 +37,10 @@ public class Order {
 
 	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
+	
+	@OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL)
+	@NotNull
+	List<OrderItem> orderItems;
 	
 	public Order() {
 		super();
@@ -99,10 +105,23 @@ public class Order {
 		this.paymentType = paymentType;
 	}
 
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Order [orderId=" + orderId + ", userId=" + userId + ", orderedDate=" + orderedDate + ", description="
 				+ description + ", status=" + status + ", paymentType=" + paymentType + "]";
+	}
+
+	public Double getTotalPrice() {
+		return orderItems.stream().collect(Collectors.summingDouble(OrderItem::getTotalPricePerItem));
 	}
 
 }
