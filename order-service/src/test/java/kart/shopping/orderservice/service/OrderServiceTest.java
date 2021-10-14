@@ -1,33 +1,33 @@
 package kart.shopping.orderservice.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import kart.shopping.orderservice.Enum.PaymentType;
+import kart.shopping.orderservice.Repository.ItemRepository;
 import kart.shopping.orderservice.Repository.OrderRepository;
 import kart.shopping.orderservice.Repository.UserRepository;
+import kart.shopping.orderservice.dto.OrderItemDto;
 import kart.shopping.orderservice.dto.OrderRequest;
 import kart.shopping.orderservice.implservice.OrderServiceImpl;
 import kart.shopping.orderservice.model.Address;
 import kart.shopping.orderservice.model.Item;
 import kart.shopping.orderservice.model.Order;
+import kart.shopping.orderservice.model.OrderItem;
 import kart.shopping.orderservice.model.User;
 
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
 class OrderServiceTest {
 
 	@Autowired
@@ -38,95 +38,94 @@ class OrderServiceTest {
 	
 	@MockBean
 	private UserRepository userRepository;
+	
+	@MockBean
+	private ItemRepository itemRepository;
 
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		 User user = new User();
-		 user.setUserId(2L);
-		 user.setUserName("Abc");
-		 user.setEmailId("Abc@gmail.com");
-		 user.setPhoneNumber("678998789");
-	List<Address> addressList = new ArrayList();
-	Address address = new Address(2L,"Hyd","78908","Shipping");
-	addressList.add(address);
-	user.setAddress(addressList);
-	
-	Item item = new Item();
-	
+		User user = new User(1L, "testUser", "999999999", "testuser@gamil.com",
+				Stream.of(new Address(1L, "KLA", "897789", "HOME"))
+				.collect(Collectors.toList()));
+		userRepository.save(user);
+		
+		List<Item> itemList = Stream
+				.of(new Item(1L, "BOOK", "Notebook", 55.0, 100.0), new Item(1L, "BOOK", "Notebook", 55.0, 100.0))
+				.collect(Collectors.toList());
+		itemRepository.saveAll(itemList);
+		
+		Order order = new Order(1L, 1L,null, "Best Product", "Created",PaymentType.UPI);
+		orderRepository.save(order);
+		
+		
+		
 	}
 
 	@Test
 	void testListOrders() {
-		//fail("Not yet implemented");
-		
-		
-		  Order order = new Order(); 
-		  order.setOrderId(1L); 
-		  order.setUserId(2L);
-		  order.setOrderedDate(LocalDate.now()); 
-		  order.setDescription("Best Product");
-		  order.setStatus("Created"); 
-		  order.setPaymentType(PaymentType.UPI);
-		  
-		  Order order1 = new Order(); 
-		  order1.setOrderId(2L); 
-		  order1.setUserId(2L);
-		  order1.setOrderedDate(LocalDate.now());
-		  order1.setDescription("Best Product"); 
-		  order1.setStatus("Created");
-		  order1.setPaymentType(PaymentType.UPI);
-		  
-		  List<Order> orderList = new ArrayList<>(); 
-		  orderList.add(order);
-		  orderList.add(order1);
-		  
-		  Mockito.when(orderRepository.findAll()).thenReturn(orderList);
-		  //assertEquals(orderService.listOrders(null)).isEqualTo(orderList);
-		  assertEquals(2, orderService.listOrders(2L).size());
-		 // assertThat(2, is(orderService.listOrders(2L)).size()); 
-		  //assertEquals(order, orderList);
-		 		
-		
+
+		List<OrderItem> orderItemList1 = Stream
+				.of(new OrderItem(new Order(1L, 2L, null, "Best Product", "Created", PaymentType.UPI),
+						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
+				.collect(Collectors.toList());
+
+		List<OrderItem> orderItemList2 = Stream
+				.of(new OrderItem(new Order(2L, 2L, null, "Best Product", "Created", PaymentType.UPI),
+						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
+				.collect(Collectors.toList());
+
+		Order order1 = new Order(1L, 2L, null, "Best Product", "Created", PaymentType.UPI);
+		order1.setOrderItems(orderItemList1);
+		Order order2 = new Order(2L, 2L, null, "Best Product", "Created", PaymentType.UPI);
+		order1.setOrderItems(orderItemList2);
+
+		List<Order> orderList = Stream.of(order1, order2).collect(Collectors.toList());
+
+		Mockito.when(orderRepository.findByUserId(2L)).thenReturn(orderList);
+		assertEquals(orderList, orderService.listOrders(2L));
+
 	}
 
 	@Test
 	void testGetOrderById() {
-		//fail("Not yet implemented");
-		Order order = new Order();
-		order.setOrderId(1L);
-		order.setUserId(2L);
-		order.setOrderedDate(LocalDate.now());
-		order.setDescription("Best Product");
-		order.setStatus("Created");
-		order.setPaymentType(PaymentType.UPI);
-		Mockito.when(orderRepository.getById(1L)).thenReturn(order);
-		//assertThat(orderService.getOrderById(1)).isEqualTo(order);
-		assertEquals(orderService.getOrderById(1L), order);
+		
+		List<OrderItem> orderItemList = Stream
+				.of(new OrderItem(new Order(1L, 2L,null, "Best Product", "Created",PaymentType.UPI), new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L)).collect(Collectors.toList());
+
+		Order order = new Order(1L, 2L,null, "Best Product", "Created",PaymentType.UPI);
+		order.setOrderItems(orderItemList);
+		
+		Mockito.when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+		assertEquals(order,orderService.getOrderById(1L));
 	}
 
 	@Test
 	void testCreateOrder() {
-		//fail("Not yet implemented");
 		
-		Order order = new Order();
-		//order.setOrderId(1L);
-		order.setUserId(2L);
-		//order.setOrderedDate(LocalDate.now());
-		order.setDescription("Best Product");
-		order.setStatus("Created");
-		order.setPaymentType(PaymentType.UPI);
+		User user = new User(2L, "testUser", "999999999", "testuser@gamil.com",
+				Stream.of(new Address(1L, "KLA", "897789", "HOME"))
+				.collect(Collectors.toList()));
 		
-		OrderRequest orderReuest = new OrderRequest();
-		orderReuest.setUserId(2L);
-		orderReuest.setDescription("best one");
-		orderReuest.setStatus("created");
-		orderReuest.setPaymentType(PaymentType.NetBanking);
-
-		Mockito.when(orderRepository.save(order)).thenReturn(order);
-		//Mockito.when(userRepository.save(user)).thenReturn(user);
-		//assertThat(orderService.createOrder(order)).isEqualTo(order);
-		assertEquals(order, orderService.createOrder(orderReuest));
+		Order order = new Order(1L, 2L, null, "Best Product", "Created", PaymentType.UPI);
+		List<OrderItem> orderItemList = Stream
+				.of(new OrderItem(order,
+						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
+				.collect(Collectors.toList());
+		order.setOrderItems(orderItemList);
+		
+		OrderRequest orderReuest = new OrderRequest(2L, "best one", "created", PaymentType.NetBanking);
+		List<OrderItemDto> orderItemDtoList = Stream
+				.of(new OrderItemDto(1L, 3L))
+				.collect(Collectors.toList());
+		orderReuest.setItems(orderItemDtoList);
+		
+        Mockito.when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+        Mockito.when(orderRepository.save(order)).thenReturn(order);
+//		Mockito.when(orderService.saveOrder(orderReuest,user)).thenReturn(order);
+//		assertThat(orderService.createOrder(order)).isEqualTo(order);
+        Order orderOut = orderService.createOrder(orderReuest);
+		assertEquals(order, orderOut);
 	}
 
 }

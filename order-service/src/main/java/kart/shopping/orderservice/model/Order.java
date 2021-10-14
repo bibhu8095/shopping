@@ -4,6 +4,8 @@ package kart.shopping.orderservice.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import kart.shopping.orderservice.Enum.PaymentType;
 
 
@@ -40,6 +42,7 @@ public class Order {
 	
 	@OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL)
 	@NotNull
+	@JsonIgnore
 	List<OrderItem> orderItems;
 	
 	public Order() {

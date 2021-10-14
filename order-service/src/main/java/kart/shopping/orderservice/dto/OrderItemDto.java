@@ -4,6 +4,13 @@ public class OrderItemDto {
 
 	private Long itemId;
 	private Long quantity;
+	
+	
+	public OrderItemDto(Long itemId, Long quantity) {
+		super();
+		this.itemId = itemId;
+		this.quantity = quantity;
+	}
 
 	public Long getItemId() {
 		return itemId;

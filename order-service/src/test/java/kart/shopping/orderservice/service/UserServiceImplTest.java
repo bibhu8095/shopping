@@ -1,4 +1,4 @@
-package kart.shopping.orderservice.implservice;
+package kart.shopping.orderservice.service;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import kart.shopping.orderservice.Repository.UserRepository;
+import kart.shopping.orderservice.implservice.UserServiceImpl;
 import kart.shopping.orderservice.model.Address;
 import kart.shopping.orderservice.model.User;
 
@@ -26,7 +27,7 @@ class UserServiceImplTest {
 	private UserRepository userRepository;
 	
 	@Test
-	void testCreateUser() {
+	void testCreateUser() throws Exception{
 		User user = new User(1L, "testUser", "999999999", "testuser@gamil.com",
 				Stream.of(new Address(1L, "KLA", "897789", "HOME"))
 				.collect(Collectors.toList()));
@@ -35,7 +36,7 @@ class UserServiceImplTest {
 	}
 
 	@Test
-	void testGetAllUser() {
+	void testGetAllUser() throws Exception{
 		List<User> userList = Stream.of(new User(1L, "testUser", "999999999", "testuser@gamil.com",
 				Stream.of(new Address(1L, "KLA", "897789", "HOME"))
 				.collect(Collectors.toList())),new User(2L, "testUser2", "999999999", "testuser@gamil.com",

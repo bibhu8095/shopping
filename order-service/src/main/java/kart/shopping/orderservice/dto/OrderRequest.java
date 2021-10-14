@@ -12,6 +12,18 @@ public class OrderRequest {
 	private PaymentType paymentType;
 	private List<OrderItemDto> items;
 
+	public OrderRequest() {
+		super();
+	}
+
+	public OrderRequest(Long userId, String description, String status, PaymentType paymentType) {
+		super();
+		this.userId = userId;
+		this.description = description;
+		this.status = status;
+		this.paymentType = paymentType;
+	}
+
 	public Long getUserId() {
 		return userId;
 	}
