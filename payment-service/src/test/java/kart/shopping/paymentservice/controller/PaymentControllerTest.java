@@ -1,7 +1,4 @@
-package kart.shopping.paymentservice.serviceImpl;
-
-
-import static org.junit.Assert.assertEquals;
+package kart.shopping.paymentservice.controller;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,49 +14,35 @@ import org.springframework.boot.test.context.SpringBootTest;
 import kart.shopping.paymentservice.entity.Address;
 import kart.shopping.paymentservice.entity.Payment;
 import kart.shopping.paymentservice.entity.PaymentType;
-import kart.shopping.paymentservice.repository.PaymentRepository;
 import kart.shopping.paymentservice.service.PaymentService;
 
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class PaymentServiceImplTest {
-
+public class PaymentControllerTest {
 	@InjectMocks
-	private PaymentService paymentService=new PaymentServiceImpl();
-	
+	private PaymentController paymentController;
 	@Mock
-	private PaymentRepository paymentRepository;
-	
+	private PaymentService paymentService;
+
 	@Before
 	public void before() {
-		System.out.println("before");
 		MockitoAnnotations.initMocks(this);
 	}
-	
-	
+
 	@Test
-	public void givenString_whensavePayment_thenReturnResponse() {
-		Payment payment=new Payment();
-		payment.setOrderId(1L);
-		payment.setPrice(200);
-		//payment.setShippingAddress(hyd);
-		payment.setPaymentType(PaymentType.UPI);
-		Mockito.when(paymentRepository.save(payment)).thenReturn(payment);
-		paymentService.savePayment(payment);
-	}
-	@Test
-	public void givenString_whensavePaymentDetails_thenReturnResponse() {
+	public void givenString_whencreatePaymentDetails_thenReturnResponse() {
 		Address hyd = new Address();
 		hyd.setAddressId(1);
 		hyd.setLocation("Bangalore");
 		hyd.setPincode("500000");
-		Payment payment=new Payment();
+		Payment payment = new Payment();
 		payment.setOrderId(1L);
 		payment.setPrice(200);
 		payment.setShippingAddress(hyd);
 		payment.setPaymentType(PaymentType.UPI);
-		Mockito.when(paymentRepository.save(payment)).thenReturn(payment);
-		Payment actual=paymentService.savePaymentDetails(1L, 200, PaymentType.UPI,hyd);
+		Mockito.when(paymentService.savePaymentDetails(1L, 200, PaymentType.UPI, hyd)).thenReturn(payment);
+		Payment actual = paymentController.createPayment(payment);
 		Assert.assertEquals(payment, actual);
 	}
+
 }
