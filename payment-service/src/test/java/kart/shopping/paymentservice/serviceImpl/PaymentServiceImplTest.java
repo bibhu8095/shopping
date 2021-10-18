@@ -1,7 +1,5 @@
 package kart.shopping.paymentservice.serviceImpl;
 
-import static org.mockito.Mockito.doThrow;
-
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -11,8 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 
 import kart.shopping.paymentservice.entity.Address;
@@ -25,6 +24,9 @@ import kart.shopping.paymentservice.util.EntityUtil;
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
 public class PaymentServiceImplTest {
+	
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentServiceImplTest.class);
 
 	@InjectMocks
 	private PaymentService paymentService = new PaymentServiceImpl();
@@ -35,7 +37,8 @@ public class PaymentServiceImplTest {
 	
 
 	@Test
-	public void givenString_whensavePayment_thenReturnResponse() {
+	public void testSavePayment() {
+		LOGGER.info("testSavePayment start");
 		/*
 		 * Payment inputPayment = new Payment(); Address addr=new Address();
 		 * inputPayment.setOrderId(1L); inputPayment.setPrice(200);
@@ -48,16 +51,20 @@ public class PaymentServiceImplTest {
 		Payment payment=paymentService.savePayment(inputPayment).get();
 		Assert.assertNotNull(payment);
 		Assert.assertEquals(payment,inputPayment);
+		LOGGER.info("testSavePayment end");
 	}
 
 	@Test
-	public void givenString_whensavePaymentException_thenReturnResponse() {
+	public void testSavePaymentException() {
+		LOGGER.info("testSavePaymentException start");
 		Optional<Payment> payment=paymentService.savePayment(null);
 		Assert.assertTrue(payment.isEmpty());
+		LOGGER.info("testSavePaymentException end");
 	}
 
 	@Test
-	public void givenString_whensavePaymentDetails_thenReturnResponse() {
+	public void testSavePaymentDetails() {
+		LOGGER.info("testSavePaymentDetails start");
 		Payment inputPayment = EntityUtil.getPayment();
 		
 		Address hyd = new Address();
@@ -73,14 +80,16 @@ public class PaymentServiceImplTest {
 		Optional<Payment> actual = paymentService.savePaymentDetails(1L, 200, PaymentType.UPI, hyd);
 		Assert.assertNotNull(actual);
 		//Assert.assertEquals(payment,actual);
+		LOGGER.info("testSavePaymentDetails end");
 	}
 	
 	@Test
-	public void givenString_whensavePaymentDetailsException_thenReturnResponse() {
-		
+	public void testSavePaymentDetailsException() {
+		LOGGER.info("testSavePaymentDetailsException start");
 		Mockito.when(paymentRepository.save(Mockito.any())).thenThrow(new DataRetrievalFailureException("Test"));
 		Optional<Payment> actual = paymentService.savePaymentDetails(1L, 200, PaymentType.UPI, new Address());
 		Assert.assertTrue(actual.isEmpty());
+		LOGGER.info("testSavePaymentDetailsException end");
 	}
 
 }
