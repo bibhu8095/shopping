@@ -1,5 +1,7 @@
 package kart.shopping.paymentservice.rabbitmq;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -12,16 +14,20 @@ import kart.shopping.paymentservice.service.PaymentService;
 @Component
 public class PaymentConsumer {
 
-	private static final Logger Logger = LoggerFactory.getLogger(PaymentConsumer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PaymentConsumer.class);
 	
 	@Autowired
 	PaymentService paymentService;
 	
 	@RabbitListener(queues="${queue.name}")
-	public void consumeMessage(Payment payment) {
-		Logger.info("Consumer received a payment request");
-		System.out.println(payment);
-		paymentService.savePayment(payment);
-		Logger.info("Payment details saved");
+	public Optional<Payment> consumePaymentMessage(Payment payment) {
+		LOGGER.info("PaymnetConsumer : received a new payment request");
+		Optional<Payment> savedPayment = paymentService.savePayment(payment);
+		
+		savedPayment.ifPresentOrElse(payemntValue->
+				{LOGGER.info("Payment request processed. Payment : "+payemntValue);},
+				()-> {LOGGER.info("Payment request failed to process");});
+		return savedPayment;
 	}
+	
 }

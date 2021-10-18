@@ -1,5 +1,7 @@
 package kart.shopping.paymentservice.serviceImpl;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +22,20 @@ public class PaymentServiceImpl implements PaymentService {
 	private PaymentRepository paymentRepository;
 
 	@Override
-	public void savePayment(Payment payment) {
-
-		Logger.info("savePayment start");
-
+	public Optional<Payment> savePayment(Payment payment) {
 		try {
 			if (payment != null) {
-				paymentRepository.save(payment);
+				payment = paymentRepository.save(payment);
+				Logger.info("Payment details saved into db");
+				return Optional.ofNullable(payment);
+			}else {
+				throw new Exception("payment value passed is null");
 			}
-			Logger.info(payment.toString());
 		} catch (Exception e) {
+			Logger.error("Exception in savePayment");
 			e.printStackTrace();
-			Logger.info("Exception in save payment");
 		}
-
-
+		return Optional.empty();
 	}
 
 	@Override

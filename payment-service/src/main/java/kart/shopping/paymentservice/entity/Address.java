@@ -11,10 +11,13 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "address")
 public class Address {
-
+	
 	@Id
-	//@NotNull
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+
+	@Column(name = "addressId")
+	@NotNull
 	private int addressId;
 
 	@Column(name = "location")
@@ -24,6 +27,24 @@ public class Address {
 	@Column(name = "pincode")
 	@NotNull
 	private String pincode;
+	
+	public Address() {
+	}
+	
+	public Address(int addressId, String location, String pincode) {
+		super();
+		this.addressId = addressId;
+		this.location = location;
+		this.pincode = pincode;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public int getAddressId() {
 		return addressId;
@@ -51,7 +72,8 @@ public class Address {
 
 	@Override
 	public String toString() {
-		return "Address [addressId=" + addressId + ", location=" + location + ", pincode=" + pincode + "]";
+		return "Address [id=" + id + ", addressId=" + addressId + ", location=" + location + ", pincode=" + pincode
+				+ "]";
 	}
 
 }

@@ -44,10 +44,10 @@ public class Payment {
 
 	public Payment() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Payment(Long orderId, double price, PaymentType paymentType, Address shippingAddress) {
+	public Payment(Long orderId, double price,
+			PaymentType paymentType, Address shippingAddress) {
 		super();
 		this.orderId = orderId;
 		this.price = price;
