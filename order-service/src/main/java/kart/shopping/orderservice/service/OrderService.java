@@ -8,7 +8,7 @@ import kart.shopping.orderservice.model.Order;
 public interface OrderService {
 
 	public List<Order> listOrders(Long userId);
-	public Order createOrder(OrderRequest dto);
+	public Order createOrder(OrderRequest order);
 	public Order getOrderById(Long id);
 		
 	

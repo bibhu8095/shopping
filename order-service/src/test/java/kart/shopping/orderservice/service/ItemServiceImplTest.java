@@ -2,41 +2,44 @@ package kart.shopping.orderservice.service;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import kart.shopping.orderservice.Repository.ItemRepository;
+import kart.shopping.orderservice.dto.ItemDto;
 import kart.shopping.orderservice.implservice.ItemServiceImpl;
 import kart.shopping.orderservice.model.Item;
+import kart.shopping.orderservice.repository.ItemRepository;
+import kart.shopping.orderservice.util.EntityUtil;
 
 @SpringBootTest
 class ItemServiceImplTest {
 
-	@Autowired
-	private ItemServiceImpl itemServiceImpl;
+	@InjectMocks
+	private ItemServiceImpl itemServiceImpl = new ItemServiceImpl();
 
-	@MockBean
+	@Mock
 	private ItemRepository itemRepository;
 
 	@Test
 	void testCreateItem() throws Exception{
-		Item item = new Item(1L, "BOOK", "Notebook", 55.0, 100.0);
-		Mockito.when(itemRepository.save(item)).thenReturn(item);
-		assertEquals(item, itemServiceImpl.createItem(item));
+		
+		Item item = new Item("BOOK", "Notebook", 55.0, 100.0);
+		ItemDto itemDto = new ItemDto("Book", "NoteBook", 55.0, 100.0);
+		Mockito.when(itemRepository.save(Mockito.any())).thenReturn(item);
+		assertEquals(item, itemServiceImpl.createItem(itemDto));
 	}
 
 	@Test
 	void testGetAllItem() throws Exception{
-		Mockito.when(itemRepository.findAll()).thenReturn(
-				Stream.of(new Item(1L, "BOOK", "Notebook", 55.0, 100.0), new Item(1L, "BOOK", "Notebook", 55.0, 100.0))
-						.collect(Collectors.toList()));
+		
+		List<Item> itemList = EntityUtil.getItemList();
+		
+		Mockito.when(itemRepository.findAll()).thenReturn(itemList);
 		assertEquals(2, itemServiceImpl.getAllItem().size());
 	}
 

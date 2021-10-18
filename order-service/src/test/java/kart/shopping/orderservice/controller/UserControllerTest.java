@@ -3,8 +3,6 @@ package kart.shopping.orderservice.controller;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kart.shopping.orderservice.implservice.UserServiceImpl;
-import kart.shopping.orderservice.model.Address;
 import kart.shopping.orderservice.model.User;
+import kart.shopping.orderservice.util.EntityUtil;
 
 @SpringBootTest
 class UserControllerTest {
@@ -45,9 +43,8 @@ class UserControllerTest {
 	
 	@Test
 	void testCreateUser() throws Exception{
-		User user = new User(1L, "testUser", "999999999", "testuser@gamil.com",
-				Stream.of(new Address(1L, "KLA", "897789", "HOME"))
-				.collect(Collectors.toList()));
+		
+		User user = EntityUtil.getUser();
 		
 		String inputJson = mapper.writeValueAsString(user);
 		Mockito.when(userService.createUser(Mockito.any(User.class))).thenReturn(user);
@@ -64,11 +61,8 @@ class UserControllerTest {
 
 	@Test
 	void testGetAllUser() throws Exception{
-		List<User> userList = Stream.of(new User(1L, "testUser", "999999999", "testuser@gamil.com",
-				Stream.of(new Address(1L, "KLA", "897789", "HOME"))
-				.collect(Collectors.toList())),new User(2L, "testUser2", "999999999", "testuser@gamil.com",
-						Stream.of(new Address(1L, "KLA", "897789", "HOME"))
-						.collect(Collectors.toList()))).collect(Collectors.toList());
+		
+		List<User> userList = EntityUtil.getUserList();
 		
 		Mockito.when(userService.getAllUsers()).thenReturn(userList);
 		String URI = "/user/all";

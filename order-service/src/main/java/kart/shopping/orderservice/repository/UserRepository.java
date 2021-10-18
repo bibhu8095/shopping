@@ -1,4 +1,4 @@
-package kart.shopping.orderservice.Repository;
+package kart.shopping.orderservice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -4,8 +4,6 @@ package kart.shopping.orderservice.controller;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,13 +24,10 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import kart.shopping.orderservice.Enum.PaymentType;
-import kart.shopping.orderservice.dto.OrderItemDto;
 import kart.shopping.orderservice.dto.OrderRequest;
 import kart.shopping.orderservice.implservice.OrderServiceImpl;
-import kart.shopping.orderservice.model.Item;
 import kart.shopping.orderservice.model.Order;
-import kart.shopping.orderservice.model.OrderItem;
+import kart.shopping.orderservice.util.EntityUtil;
 
 @SpringBootTest
 class OrderControllerTest {
@@ -45,43 +40,17 @@ class OrderControllerTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 		mockMvc = MockMvcBuilders.webAppContextSetup(wc).build();
-		
-		Order order1 = new Order(1L, 2L, null, "Best Product", "Created", PaymentType.UPI);
-		List<OrderItem> orderItemList1 = Stream
-				.of(new OrderItem(order1,
-						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
-				.collect(Collectors.toList());
-		order1.setOrderItems(orderItemList1);
-		
-		Order order2 = new Order(2L, 2L, null, "Best Product", "Created", PaymentType.UPI);
-		List<OrderItem> orderItemList2 = Stream
-				.of(new OrderItem(order2,
-						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
-				.collect(Collectors.toList());
-		order2.setOrderItems(orderItemList2);
 
-		List<Order> orderList = Stream.of(order1, order2).collect(Collectors.toList());
+		List<Order> orderList = EntityUtil.getOrderList();
 		Mockito.when(orderService.listOrders(2L)).thenReturn(orderList);
 	}
+
 
 	@Test
 	void testGetAllOrders() throws Exception {
 		
-		Order order1 = new Order(1L, 2L, null, "Best Product", "Created", PaymentType.UPI);
-		List<OrderItem> orderItemList1 = Stream
-				.of(new OrderItem(order1,
-						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
-				.collect(Collectors.toList());
-		order1.setOrderItems(orderItemList1);
-		
-		Order order2 = new Order(2L, 2L, null, "Best Product", "Created", PaymentType.UPI);
-		List<OrderItem> orderItemList2 = Stream
-				.of(new OrderItem(order2,
-						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
-				.collect(Collectors.toList());
-		order2.setOrderItems(orderItemList2);
 
-		List<Order> orderList = Stream.of(order1, order2).collect(Collectors.toList());
+		List<Order> orderList = EntityUtil.getOrderList();
 		
 		Mockito.when(orderService.listOrders(2L)).thenReturn(orderList);
 		String URI = "/order/?userId=2";
@@ -96,12 +65,7 @@ class OrderControllerTest {
 	@Test
 	void testGetOrderById() throws Exception {
 		
-		Order order = new Order(1L, 2L, null, "Best Product", "Created", PaymentType.UPI);
-		List<OrderItem> orderItemList = Stream
-				.of(new OrderItem(order,
-						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
-				.collect(Collectors.toList());
-		order.setOrderItems(orderItemList);
+		Order order = EntityUtil.getOrder();
 		
 		Mockito.when(orderService.getOrderById(Mockito.any())).thenReturn(order);
 		String URI = "/order/1";
@@ -115,19 +79,8 @@ class OrderControllerTest {
 	@Test
 	void testSaveOrder() throws Exception {
 
-		Order order = new Order(1L, 2L, null, "Best Product", "Created", PaymentType.UPI);
-		List<OrderItem> orderItemList = Stream
-				.of(new OrderItem(order,
-						new Item(1L, "BOOK", "Notebook", 55.0, 100.0), 3L))
-				.collect(Collectors.toList());
-		order.setOrderItems(orderItemList);
-		
-		OrderRequest orderReuest = new OrderRequest(2L, "best one", "created", PaymentType.NetBanking);
-		List<OrderItemDto> orderItemDtoList = Stream
-				.of(new OrderItemDto(1L, 3L))
-				.collect(Collectors.toList());
-		orderReuest.setItems(orderItemDtoList);
-		
+		Order order = EntityUtil.getOrder();
+			
 		String expected = this.mapToJson(order);
 		String URI = "/order/save";
 		Mockito.when(orderService.createOrder(Mockito.any(OrderRequest.class))).thenReturn(order);

@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kart.shopping.orderservice.implservice.ItemServiceImpl;
+import kart.shopping.orderservice.dto.ItemDto;
 import kart.shopping.orderservice.model.Item;
+import kart.shopping.orderservice.service.ItemService;
 
 @RestController
 @RequestMapping(value = "/item")
 public class ItemController {
 	
 	@Autowired
-	private ItemServiceImpl itemServiceimpl;
-	
+	private ItemService itemService;
 	
 	@PostMapping(value = "/create")
-	public Item createItem(@RequestBody Item item) {
-		
-		return itemServiceimpl.createItem(item);
+	public Item createItem(@RequestBody ItemDto item) {
+		//validations
+		return itemService.createItem(item);
 	}
 	
 	@GetMapping(value = "/all")
 	public List<Item> getAllItem() {
-		return itemServiceimpl.getAllItem();
+		return itemService.getAllItem();
 	}
 }

@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kart.shopping.orderservice.dto.OrderRequest;
-import kart.shopping.orderservice.implservice.OrderServiceImpl;
 import kart.shopping.orderservice.model.Order;
+import kart.shopping.orderservice.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,7 +27,7 @@ public class OrderController {
 
 	Logger logger = LoggerFactory.getLogger(OrderController.class);
 	@Autowired
-	private OrderServiceImpl orderService;
+	private OrderService orderService;
 
 	@GetMapping(value = "/")
 	public ResponseEntity<List<Order>> getAllOrders(@RequestParam Long userId) {
@@ -41,8 +41,9 @@ public class OrderController {
 	}
 
 	@PostMapping(value = "/save")
-	public ResponseEntity<Order> saveOrder(@RequestBody OrderRequest dto) {
-		return new ResponseEntity<>(orderService.createOrder(dto),HttpStatus.CREATED);
+	public ResponseEntity<Order> saveOrder(@RequestBody OrderRequest order) {
+//		validations
+		return new ResponseEntity<>(orderService.createOrder(order),HttpStatus.CREATED);
 	}
 
 }

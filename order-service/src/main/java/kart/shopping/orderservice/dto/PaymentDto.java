@@ -1,6 +1,5 @@
 package kart.shopping.orderservice.dto;
 
-import kart.shopping.orderservice.Enum.PaymentType;
 import kart.shopping.orderservice.model.Address;
 
 
@@ -12,10 +11,10 @@ public class PaymentDto {
 	private Double price;
 	private PaymentType paymentType;
 
-	public PaymentDto(Long orderId, String status, Double price, PaymentType paymentType) {
+	public PaymentDto(Long orderId, String status, Double price, PaymentType paymentType,Address shippingAddress) {
 		super();
 		this.orderId = orderId;
-//		this.shippingAddress = shippingAddress;
+		this.shippingAddress = shippingAddress;
 		this.status = status;
 		this.price = price;
 		this.paymentType = paymentType;

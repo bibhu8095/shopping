@@ -3,6 +3,7 @@ package kart.shopping.orderservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.*;
@@ -11,7 +12,12 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "items")
-public class Item {
+public class Item implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 535437901999561056L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,15 +41,14 @@ public class Item {
 	private Double stock;
 
 	@OneToMany(mappedBy = "id.item", cascade = CascadeType.ALL)
-	List<OrderItem> orderItems;
+	private List<OrderItem> orderItems;
 	
 	public Item() {
 		super();
 	}
 
-	public Item(Long itemId, String itemName, String description, Double price, Double stock) {
+	public Item(String itemName, String description, Double price, Double stock) {
 		super();
-		this.itemId = itemId;
 		this.itemName = itemName;
 		this.description = description;
 		this.price = price;

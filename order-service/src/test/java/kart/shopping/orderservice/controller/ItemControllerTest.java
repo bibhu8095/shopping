@@ -3,8 +3,6 @@ package kart.shopping.orderservice.controller;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,8 +22,10 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import kart.shopping.orderservice.dto.ItemDto;
 import kart.shopping.orderservice.implservice.ItemServiceImpl;
 import kart.shopping.orderservice.model.Item;
+import kart.shopping.orderservice.util.EntityUtil;
 
 @SpringBootTest
 class ItemControllerTest {
@@ -45,9 +45,7 @@ class ItemControllerTest {
 	@Test
 	void testGetAllItem() throws Exception {
 		
-		List<Item> itemList = Stream
-				.of(new Item(1L, "BOOK", "Notebook", 55.0, 100.0), new Item(1L, "BOOK", "Notebook", 55.0, 100.0))
-				.collect(Collectors.toList());
+		List<Item> itemList = EntityUtil.getItemList();
 
 		Mockito.when(itemService.getAllItem()).thenReturn(itemList);
 		String URI = "/item/all";
@@ -62,9 +60,9 @@ class ItemControllerTest {
 	@Test
 	void testCreateItem() throws Exception {
 		
-		Item item = new Item(1L, "BOOK", "Notebook", 55.0, 100.0);
+		Item item = new Item("BOOK", "Notebook", 55.0, 100.0);
 		String inputJson = this.mapToJson(item);
-		Mockito.when(itemService.createItem(Mockito.any(Item.class))).thenReturn(item);
+		Mockito.when(itemService.createItem(Mockito.any(ItemDto.class))).thenReturn(item);
 		String URI = "/item/create";	
 		RequestBuilder requestBuilder = MockMvcRequestBuilders
 				.post(URI)

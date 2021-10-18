@@ -6,16 +6,18 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import kart.shopping.orderservice.Enum.PaymentType;
+import kart.shopping.orderservice.dto.PaymentType;
 
-
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable {
+
+	private static final long serialVersionUID = -7652888985305782769L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,12 +41,12 @@ public class Order {
 
 	@Enumerated(EnumType.STRING)
 	private PaymentType paymentType;
-	
+
 	@OneToMany(mappedBy = "id.order", cascade = CascadeType.ALL)
 	@NotNull
 	@JsonIgnore
-	List<OrderItem> orderItems;
-	
+	private List<OrderItem> orderItems;
+
 	public Order() {
 		super();
 	}
@@ -115,7 +117,6 @@ public class Order {
 	public void setOrderItems(List<OrderItem> orderItems) {
 		this.orderItems = orderItems;
 	}
-
 
 	@Override
 	public String toString() {

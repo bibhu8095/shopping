@@ -25,11 +25,6 @@ public class RabbitConfig {
 	@Value("${routing.key}")
 	private String routingKey;
 
-	/*
-	 * public static final String queue_name = "pay_queue"; public static final
-	 * String exchange_name = "pay_exchange"; public static final String routing_key
-	 * = "pay_rt_key";
-	 */
 
 	@Bean
 	public Queue queue() {

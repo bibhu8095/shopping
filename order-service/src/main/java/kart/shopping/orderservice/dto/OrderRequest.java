@@ -2,7 +2,7 @@ package kart.shopping.orderservice.dto;
 
 import java.util.List;
 
-import kart.shopping.orderservice.Enum.PaymentType;
+import kart.shopping.orderservice.model.Address;
 
 public class OrderRequest {
 
@@ -11,6 +11,7 @@ public class OrderRequest {
 	private String status;
 	private PaymentType paymentType;
 	private List<OrderItemDto> items;
+	private Address shippingAddress;
 
 	public OrderRequest() {
 		super();
@@ -62,6 +63,14 @@ public class OrderRequest {
 
 	public void setPaymentType(PaymentType paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public Address getShippingAddress() {
+		return shippingAddress;
+	}
+
+	public void setShippingAddress(Address shippingAddress) {
+		this.shippingAddress = shippingAddress;
 	}
 
 }

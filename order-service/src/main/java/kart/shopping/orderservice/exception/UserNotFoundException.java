@@ -1,4 +1,4 @@
-package kart.shopping.orderservice.Exception;
+package kart.shopping.orderservice.exception;
 
 public class UserNotFoundException extends IllegalArgumentException{
 

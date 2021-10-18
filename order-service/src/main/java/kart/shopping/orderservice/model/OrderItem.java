@@ -1,6 +1,8 @@
 
 package kart.shopping.orderservice.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -10,8 +12,10 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "order_item")
+public class OrderItem implements Serializable{
 
-public class OrderItem {
+
+	private static final long serialVersionUID = 3796260630757571327L;
 
 	@EmbeddedId
 	private OrderItemPk id;

@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import kart.shopping.orderservice.implservice.UserServiceImpl;
 import kart.shopping.orderservice.model.User;
+import kart.shopping.orderservice.service.UserService;
 
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
 	
 	@Autowired
-	private UserServiceImpl userService;
+	private UserService userService;
 	
 	@GetMapping(value = "/all")
 	public ResponseEntity<List<User>> getAllUsers() {

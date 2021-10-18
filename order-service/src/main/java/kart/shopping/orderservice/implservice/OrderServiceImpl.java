@@ -4,6 +4,7 @@ package kart.shopping.orderservice.implservice;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -13,19 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import kart.shopping.orderservice.Exception.OrderNotFoundException;
-import kart.shopping.orderservice.Exception.UserNotFoundException;
-import kart.shopping.orderservice.Repository.ItemRepository;
-import kart.shopping.orderservice.Repository.OrderItemRepository;
-import kart.shopping.orderservice.Repository.OrderRepository;
-import kart.shopping.orderservice.Repository.UserRepository;
 import kart.shopping.orderservice.dto.OrderItemDto;
 import kart.shopping.orderservice.dto.OrderRequest;
 import kart.shopping.orderservice.dto.PaymentDto;
+import kart.shopping.orderservice.exception.OsDataNotFoundException;
+import kart.shopping.orderservice.exception.OrderNotFoundException;
+import kart.shopping.orderservice.model.Address;
 import kart.shopping.orderservice.model.Item;
 import kart.shopping.orderservice.model.Order;
 import kart.shopping.orderservice.model.OrderItem;
 import kart.shopping.orderservice.model.User;
+import kart.shopping.orderservice.repository.ItemRepository;
+import kart.shopping.orderservice.repository.OrderRepository;
+import kart.shopping.orderservice.repository.UserRepository;
 import kart.shopping.orderservice.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,32 +56,43 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public List<Order> listOrders(Long userId) {
+		if(userId==null) {
+			throw new OsDataNotFoundException("User id must not be null");
+		}
 		return orderRepository.findByUserId(userId);
 	}
 
 	@Override
-	public Order getOrderById(Long id) {
-		return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order id is not found"));
+	public Order getOrderById(Long orderId) {
+		if(orderId==null) {
+			throw new OsDataNotFoundException("Order id must not be null");
+		}
+		return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException("Order id is not found"));
 
 	}
 
 	@Override
-	public Order createOrder(OrderRequest dto) {
+	public Order createOrder(OrderRequest order) {
 
-		User user = userRepository.findById(dto.getUserId())
-				.orElseThrow(() -> new UserNotFoundException("User id is not found"));
-
-		Order order = saveOrder(dto, user);
-		//logger.info("Order Saved"  + dto.getUserId());
+		if(order==null) {
+			throw new OsDataNotFoundException("Order Request must not be null");
+		}
+		Optional<User> user =userRepository.findById(order.getUserId());
+		if(!user.isPresent()) {
+			throw new OsDataNotFoundException("User not found");
+		}
+	
+		logger.info("Order is prepare to save");
+		Order orderResponse = saveOrder(order);
 		logger.info("Order is saved");
-		return order;
+		return orderResponse;
 
 	}
-
-	private Order saveOrder(OrderRequest orderRequest, User user) {
+	
+	private Order saveOrder(OrderRequest orderRequest) {
 		
 		Order order = new Order();
-		order.setUserId(user.getUserId());
+		order.setUserId(orderRequest.getUserId());
 		order.setDescription(orderRequest.getDescription());
 		order.setStatus(orderRequest.getStatus());
 		order.setPaymentType(orderRequest.getPaymentType());
@@ -94,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setOrderItems(of(order, itemMap, orderRequest.getItems()));
 
 		order = orderRepository.save(order);
-		pushToQueue(order);
+		pushToQueue(order,orderRequest.getShippingAddress());
 		return order;
 
 	}
@@ -105,13 +117,13 @@ public class OrderServiceImpl implements OrderService {
 	
 	}
 	
-	private void pushToQueue(Order order) {
+	private void pushToQueue(Order order, Address address) {
 
-		
-		PaymentDto paymentDto = new PaymentDto(order.getOrderId(), order.getStatus(), order.getTotalPrice(), order.getPaymentType());
-		
+		PaymentDto paymentDto = new PaymentDto(order.getOrderId(), order.getStatus(), order.getTotalPrice(), order.getPaymentType(),address);
 		rabbitTemplate.convertAndSend(exchange, routingKey, paymentDto);
+		logger.info("Payment data pushed into queue");
 
 	}
+	
 }
 
