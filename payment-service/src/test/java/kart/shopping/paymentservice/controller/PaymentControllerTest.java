@@ -1,5 +1,7 @@
 package kart.shopping.paymentservice.controller;
 
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import kart.shopping.paymentservice.entity.Address;
 import kart.shopping.paymentservice.entity.Payment;
 import kart.shopping.paymentservice.entity.PaymentType;
 import kart.shopping.paymentservice.service.PaymentService;
+import kart.shopping.paymentservice.util.EntityUtil;
 
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
@@ -24,13 +27,10 @@ public class PaymentControllerTest {
 	@Mock
 	private PaymentService paymentService;
 
-	@Before
-	public void before() {
-		MockitoAnnotations.initMocks(this);
-	}
-
 	@Test
 	public void givenString_whencreatePaymentDetails_thenReturnResponse() {
+		//Payment inputPayment = EntityUtil.getPayment();
+
 		Address hyd = new Address();
 		hyd.setAddressId(1);
 		hyd.setLocation("Bangalore");
@@ -40,7 +40,9 @@ public class PaymentControllerTest {
 		payment.setPrice(200);
 		payment.setShippingAddress(hyd);
 		payment.setPaymentType(PaymentType.UPI);
-		Mockito.when(paymentService.savePaymentDetails(1L, 200, PaymentType.UPI, hyd)).thenReturn(payment);
+
+		Mockito.when(paymentService.savePaymentDetails(1L, 200, PaymentType.UPI, hyd))
+				.thenReturn(Optional.ofNullable(payment));
 		Payment actual = paymentController.createPayment(payment);
 		Assert.assertEquals(payment, actual);
 	}

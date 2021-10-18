@@ -15,6 +15,7 @@ import kart.shopping.paymentservice.entity.Address;
 import kart.shopping.paymentservice.entity.Payment;
 import kart.shopping.paymentservice.entity.PaymentType;
 import kart.shopping.paymentservice.service.PaymentService;
+import kart.shopping.paymentservice.util.EntityUtil;
 
 @SpringBootTest
 public class PaymentConsumerTest {
@@ -30,10 +31,7 @@ public class PaymentConsumerTest {
 	@Test
 	public void testConsumePaymentMessage() {
 		LOGGER.info("testConsumePaymentMessage start");
-		Address shippingAddess = new Address(11,"11A Street, Rome", "001122");
-		Payment inputPayment = new Payment(11L, 12.5, PaymentType.DebitCards, shippingAddess);
-		inputPayment.setId(1);
-		shippingAddess.setId(1);
+		Payment inputPayment = EntityUtil.getPayment();
 		Mockito.when(paymentService.savePayment(inputPayment)).thenReturn(Optional.ofNullable(inputPayment));
 		Payment savedPayment = paymentConsumer.consumePaymentMessage(inputPayment).orElse(null);
 		Assert.assertNotNull(savedPayment);

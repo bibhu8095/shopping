@@ -1,5 +1,7 @@
 package kart.shopping.paymentservice.controller;
 
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -26,8 +28,8 @@ public class PaymentController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public @Valid Payment createPayment(@RequestBody Payment paymentDto) {
 		Logger.info("Save Payment Details");
-		Payment payment = paymentService.savePaymentDetails(paymentDto.getOrderId(), paymentDto.getPrice(), paymentDto.getPaymentType(), paymentDto.getShippingAddress());
-		return payment;
+		Optional<Payment> payment = paymentService.savePaymentDetails(paymentDto.getOrderId(), paymentDto.getPrice(), paymentDto.getPaymentType(), paymentDto.getShippingAddress());
+		return payment.get();
 
 	}
 

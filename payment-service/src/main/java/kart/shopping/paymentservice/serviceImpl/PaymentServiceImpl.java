@@ -17,7 +17,7 @@ import kart.shopping.paymentservice.service.PaymentService;
 public class PaymentServiceImpl implements PaymentService {
 
 	private static final Logger Logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
-	
+
 	@Autowired
 	private PaymentRepository paymentRepository;
 
@@ -28,28 +28,28 @@ public class PaymentServiceImpl implements PaymentService {
 				payment = paymentRepository.save(payment);
 				Logger.info("Payment details saved into db");
 				return Optional.ofNullable(payment);
-			}else {
+			} else {
 				throw new Exception("payment value passed is null");
 			}
 		} catch (Exception e) {
-			Logger.error("Exception in savePayment");
-			e.printStackTrace();
+			Logger.error("Exception in savePayment", e);
 		}
 		return Optional.empty();
 	}
 
 	@Override
-	public Payment savePaymentDetails(Long orderId, double price, PaymentType paymentType, Address shippingAddress) {
+	public Optional<Payment> savePaymentDetails(Long orderId, double price, PaymentType paymentType,
+			Address shippingAddress) {
 		Logger.info("Save payment details");
-		Payment payment=new Payment(orderId, price, paymentType, shippingAddress);
+		Payment payment = new Payment(orderId, price, paymentType, shippingAddress);
 		try {
-			if(payment!=null) {
-				paymentRepository.save(payment);
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
+
+			paymentRepository.save(payment);
+			return Optional.ofNullable(payment);
+		} catch (Exception e) {
+			Logger.error("Exception in savePaymentDetails", e);
 		}
-		return payment;
+		return Optional.empty();
 	}
 
 }

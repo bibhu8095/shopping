@@ -12,5 +12,5 @@ public interface PaymentService {
 	
 	public Optional<Payment> savePayment(Payment payment);
 	
-	public Payment savePaymentDetails(Long orderId, double price, PaymentType paymentType, Address shippingAddress);
+	public Optional<Payment> savePaymentDetails(Long orderId, double price, PaymentType paymentType, Address shippingAddress);
 }
