@@ -1,6 +1,12 @@
 package kart.shopping.paymentservice.rabbitmq;
 
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +28,28 @@ public class PaymentConsumer {
 	@RabbitListener(queues="${queue.name}")
 	public Optional<Payment> consumePaymentMessage(Payment payment) {
 		LOGGER.info("PaymnetConsumer : received a new payment request");
-		Optional<Payment> savedPayment = paymentService.savePayment(payment);
+		Optional<Payment> savedPayment = Optional.empty();
+		if(payment!=null) {
+			ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		    Validator validator = factory.getValidator();
+		    Set<ConstraintViolation<Payment>> violations = validator.validate(payment);
+			
+		    if(violations.isEmpty()){
+		    	LOGGER.info("PaymnetConsumer : no violations");
+		    	savedPayment = paymentService.savePayment(payment);
+				savedPayment.ifPresentOrElse(payemntValue->
+						{LOGGER.info("Payment request processed. Payment : "+payemntValue);},
+						()-> {LOGGER.info("Payment request failed to process");});
+		    }else {
+		    	violations.forEach(violation -> {
+		    	    String message = violation.getPropertyPath() + ": " + violation.getMessage();
+		    	    LOGGER.info("violation="+message);
+		    	});
+		    }
+		}else {
+			LOGGER.error("payment value is null");
+		}
 		
-		savedPayment.ifPresentOrElse(payemntValue->
-				{LOGGER.info("Payment request processed. Payment : "+payemntValue);},
-				()-> {LOGGER.info("Payment request failed to process");});
 		return savedPayment;
 	}
 	

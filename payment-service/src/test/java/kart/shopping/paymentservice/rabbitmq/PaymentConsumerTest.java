@@ -11,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import kart.shopping.paymentservice.entity.Address;
 import kart.shopping.paymentservice.entity.Payment;
-import kart.shopping.paymentservice.entity.PaymentType;
 import kart.shopping.paymentservice.service.PaymentService;
 import kart.shopping.paymentservice.util.EntityUtil;
 
@@ -42,12 +40,20 @@ public class PaymentConsumerTest {
 	@Test
 	public void testConsumePaymentMessageNullValue() {
 		LOGGER.info("testConsumePaymentMessageNullValue start");
-		Mockito.when(paymentService.savePayment(null)).thenReturn(Optional.empty());
 		Payment savedPayment = paymentConsumer.consumePaymentMessage(null).orElse(null);
 		Assert.assertNull(savedPayment);
 		LOGGER.info("testConsumePaymentMessageNullValue end");
 	}
 
+	@Test
+	public void testConsumePaymentMessageInvalidData() {
+		LOGGER.info("testConsumePaymentMessageInvalidData start");
+		Payment inputPayment = EntityUtil.getPayment();
+		inputPayment.setOrderId(null);
+		Payment savedPayment = paymentConsumer.consumePaymentMessage(inputPayment).orElse(null);
+		Assert.assertNull(savedPayment);
+		LOGGER.info("testConsumePaymentMessageInvalidData end");
+	}
 }
 
 
