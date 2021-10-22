@@ -114,10 +114,6 @@ public class OrderServiceImpl implements OrderService {
 
 		order = orderRepository.save(order);
 		
-		//for Transaction test purpose only
-		Item tempItem = new Item("tempItem", "for testing", 0.0, 10.0);
-		itemRepository.save(tempItem);
-		
 		pushToQueue(order,orderRequest.getShippingAddress());
 		return order;
 
