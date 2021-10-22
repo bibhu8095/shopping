@@ -2,6 +2,8 @@ package kart.shopping.orderservice.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +43,8 @@ public class OrderController {
 	}
 
 	@PostMapping(value = "/save")
-	public ResponseEntity<Order> saveOrder(@RequestBody OrderRequest order) {
-//		validations
-		return new ResponseEntity<>(orderService.createOrder(order),HttpStatus.CREATED);
+	public ResponseEntity<Order> saveOrder(@Valid @RequestBody OrderRequest order) {
+	    return new ResponseEntity<>(orderService.createOrder(order),HttpStatus.CREATED);
 	}
 
 }

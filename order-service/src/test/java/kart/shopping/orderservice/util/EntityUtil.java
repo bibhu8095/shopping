@@ -1,5 +1,6 @@
 package kart.shopping.orderservice.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -70,6 +71,14 @@ public class EntityUtil {
 		orderReuest.setItems(orderItemDtoList);
 		orderReuest.setShippingAddress(new Address(1L, "KLA", "897789", "HOME"));
 		return orderReuest;
+	}
+	
+	public static List<Item> getItemListWithId(){
+		List<Item> itemList  = new ArrayList<>();
+		Item item1 = new Item("BOOK", "Note book", 55.0, 100.0);
+		item1.setItemId(1L);
+		itemList.add(item1);
+		return itemList;
 	}
 	
 	private EntityUtil() {

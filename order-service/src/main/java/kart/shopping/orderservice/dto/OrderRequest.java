@@ -2,15 +2,22 @@ package kart.shopping.orderservice.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import kart.shopping.orderservice.model.Address;
 
 public class OrderRequest {
 
+	@NotNull(message = "User id must not be null/blank")
 	private Long userId;
 	private String description;
 	private String status;
+	@NotNull(message = "Payment type must not be null/blank")
 	private PaymentType paymentType;
+	@NotEmpty(message = "Oreder request atlest contain one item")
 	private List<OrderItemDto> items;
+	@NotNull(message = "you must provide shipping address")
 	private Address shippingAddress;
 
 	public OrderRequest() {

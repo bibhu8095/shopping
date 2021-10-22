@@ -3,6 +3,7 @@ package kart.shopping.orderservice.model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,53 +13,47 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "address")
-public class Address implements Serializable{
+@Table(name = "addresses")
+public class Address implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 821174118063899237L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
 	private Long addressId;
 
 	@Column(name = "location")
 	@NotNull
 	private String location;
 
-	@Column(name = "pin_code")
+	@Column(name = "pincode")
 	@NotNull
-	private String pinCode;
+	private String pincode;
 
 	@Column(name = "address_type")
 	@NotNull
 	private String addressType;
 
-	@ManyToOne
-	@JoinColumn(name="user_id")
-	@JsonIgnore
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	private User user;
 
 	public Address() {
 		super();
 	}
 
-	public Address(Long addressId, String location, String pinCode, String addressType) {
+	public Address(Long addressId, String location, String pincode, String addressType) {
 		super();
 		this.addressId = addressId;
 		this.location = location;
-		this.pinCode = pinCode;
+		this.pincode = pincode;
 		this.addressType = addressType;
-		
+
 	}
 
 	public Long getAddressId() {
@@ -77,12 +72,12 @@ public class Address implements Serializable{
 		this.location = location;
 	}
 
-	public String getPinCode() {
-		return pinCode;
+	public String getPincode() {
+		return pincode;
 	}
 
-	public void setPinCode(String pinCode) {
-		this.pinCode = pinCode;
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
 	}
 
 	public String getAddressType() {
@@ -103,7 +98,7 @@ public class Address implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Address [addressId=" + addressId + ", location=" + location + ", pinCode=" + pinCode + ", addressType="
+		return "Address [addressId=" + addressId + ", location=" + location + ", pinCode=" + pincode + ", addressType="
 				+ addressType + ", user=" + user + "]";
-	}	
+	}
 }

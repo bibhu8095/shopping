@@ -23,8 +23,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kart.shopping.orderservice.dto.ItemDto;
-import kart.shopping.orderservice.implservice.ItemServiceImpl;
 import kart.shopping.orderservice.model.Item;
+import kart.shopping.orderservice.service.ItemService;
 import kart.shopping.orderservice.util.EntityUtil;
 
 @SpringBootTest
@@ -32,7 +32,7 @@ class ItemControllerTest {
 
 	private MockMvc mockMvc;
 	@MockBean
-	private ItemServiceImpl itemService;
+	private ItemService itemService;
 	@Autowired
 	private WebApplicationContext webAppContest;
 

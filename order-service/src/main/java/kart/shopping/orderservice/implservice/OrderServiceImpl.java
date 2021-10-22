@@ -13,12 +13,13 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kart.shopping.orderservice.dto.OrderItemDto;
 import kart.shopping.orderservice.dto.OrderRequest;
 import kart.shopping.orderservice.dto.PaymentDto;
-import kart.shopping.orderservice.exception.OsDataNotFoundException;
 import kart.shopping.orderservice.exception.OrderNotFoundException;
+import kart.shopping.orderservice.exception.OsDataNotFoundException;
 import kart.shopping.orderservice.model.Address;
 import kart.shopping.orderservice.model.Item;
 import kart.shopping.orderservice.model.Order;
@@ -72,6 +73,7 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	@Transactional
 	public Order createOrder(OrderRequest order) {
 
 		if(order==null) {
@@ -85,12 +87,13 @@ public class OrderServiceImpl implements OrderService {
 		logger.info("Order is prepare to save");
 		Order orderResponse = saveOrder(order);
 		logger.info("Order is saved");
+		
 		return orderResponse;
 
 	}
 	
 	private Order saveOrder(OrderRequest orderRequest) {
-		
+				
 		Order order = new Order();
 		order.setUserId(orderRequest.getUserId());
 		order.setDescription(orderRequest.getDescription());
@@ -103,14 +106,23 @@ public class OrderServiceImpl implements OrderService {
 				.findAllById(orderRequest.getItems().stream().map(OrderItemDto::getItemId).collect(Collectors.toList()))
 				.stream().collect(Collectors.toMap(Item::getItemId, itm -> itm));
 		
+		if(itemMap.isEmpty()) {
+			throw new OsDataNotFoundException("Order not containing any valid items");
+		}
+		
 		order.setOrderItems(of(order, itemMap, orderRequest.getItems()));
 
 		order = orderRepository.save(order);
+		
+		//for Transaction test purpose only
+		Item tempItem = new Item("tempItem", "for testing", 0.0, 10.0);
+		itemRepository.save(tempItem);
+		
 		pushToQueue(order,orderRequest.getShippingAddress());
 		return order;
 
 	}
-	
+
 	private List<OrderItem> of(Order order,Map<Long, Item> itemMap, List<OrderItemDto> orderItemDtos) {
 		return orderItemDtos.stream().map(orderItemDto -> 
 			new OrderItem(order, itemMap.get(orderItemDto.getItemId()), orderItemDto.getQuantity())).collect(Collectors.toList());

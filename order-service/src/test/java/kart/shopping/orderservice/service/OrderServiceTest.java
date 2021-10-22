@@ -1,6 +1,7 @@
 package kart.shopping.orderservice.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import kart.shopping.orderservice.dto.OrderRequest;
+import kart.shopping.orderservice.exception.OsDataNotFoundException;
 import kart.shopping.orderservice.implservice.OrderServiceImpl;
 import kart.shopping.orderservice.model.Item;
 import kart.shopping.orderservice.model.Order;
@@ -46,9 +48,6 @@ class OrderServiceTest {
 		User user = EntityUtil.getUser();
 		Mockito.when(userRepository.save(user)).thenReturn(user);
 
-		List<Item> itemList = EntityUtil.getItemList();
-		Mockito.when(itemRepository.saveAll(itemList)).thenReturn(itemList);
-
 	}
 
 	@Test
@@ -76,12 +75,39 @@ class OrderServiceTest {
 		User user = EntityUtil.getUser();
 
 		Order order = EntityUtil.getOrder();
+		
+		List<Item> itemList = EntityUtil.getItemListWithId();
 
 		OrderRequest orderReuest = EntityUtil.getOrderRequest();
 		Mockito.when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+		Mockito.when(itemRepository.findAllById(Mockito.any())).thenReturn(itemList);
 		Mockito.when(orderRepository.save(Mockito.any())).thenReturn(order);
 		Order orderOut = orderService.createOrder(orderReuest);
 		assertEquals(order, orderOut);
+	}
+	
+	@Test
+	void testCreateOrderWithUserNotFoundException() {
+		
+		OrderRequest orderReuest = EntityUtil.getOrderRequest();
+		orderReuest.setUserId(0L);
+		
+		Throwable exception = assertThrows(OsDataNotFoundException.class, () -> orderService.createOrder(orderReuest));
+	    assertEquals("User not found", exception.getMessage());
+
+	}
+	
+	@Test
+	void testCreateOrderWithInValidItemException() {
+		
+		User user = EntityUtil.getUser();
+		Mockito.when(userRepository.findById(2L)).thenReturn(Optional.of(user));
+		
+		OrderRequest orderReuest = EntityUtil.getOrderRequest();
+		
+		Throwable exception = assertThrows(OsDataNotFoundException.class, () -> orderService.createOrder(orderReuest));
+	    assertEquals("Order not containing any valid items", exception.getMessage());
+
 	}
 
 }

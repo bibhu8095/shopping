@@ -1,10 +1,16 @@
 package kart.shopping.orderservice.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class ItemDto {
 
+	@NotBlank(message = "Item Name must not be null/blank")
 	private String itemName;
 	private String description;
+	@NotNull(message = "Price must not be null/blank")
 	private Double price;
+	@NotNull(message = "stock must not be null/blank")
 	private Double stock;
 
 	public ItemDto() {

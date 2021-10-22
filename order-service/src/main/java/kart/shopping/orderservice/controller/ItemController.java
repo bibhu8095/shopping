@@ -2,6 +2,8 @@ package kart.shopping.orderservice.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +23,7 @@ public class ItemController {
 	private ItemService itemService;
 	
 	@PostMapping(value = "/create")
-	public Item createItem(@RequestBody ItemDto item) {
-		//validations
+	public Item createItem(@Valid @RequestBody ItemDto item) {
 		return itemService.createItem(item);
 	}
 	

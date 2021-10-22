@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 @Embeddable
 public class OrderItemPk implements Serializable{
 
+	private static final long serialVersionUID = -5712621914870384200L;
+
 	@ManyToOne
 	@JoinColumn(name = "order_id")
 	@NotNull
